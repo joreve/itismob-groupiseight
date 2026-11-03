@@ -1,3 +1,83 @@
 <resources>
     <string name="app_name">Adapted</string>
+    <string name="app_tagline">Books, movies, series and music — connected.</string>
+
+    <!-- Categories -->
+    <string name="category_book">Book</string>
+    <string name="category_movie">Movie</string>
+    <string name="category_tv_series">TV Series</string>
+    <string name="category_music">Music</string>
+    <string name="category_all">All</string>
+    <string name="category_books_plural">Books</string>
+    <string name="category_movies_plural">Movies</string>
+
+    <!-- Login -->
+    <string name="login_title">Welcome back</string>
+    <string name="login_subtitle">Log in to continue to Adapted.</string>
+    <string name="login_button">Log in</string>
+    <string name="login_no_account">New to Adapted?</string>
+    <string name="login_create_account">Create an account</string>
+    <string name="message_registration_success">Account created! Log in to continue.</string>
+
+    <!-- Registration -->
+    <string name="register_title">Create your account</string>
+    <string name="register_subtitle">Start tracking and reviewing everything you watch, read and hear.</string>
+    <string name="register_button">Create account</string>
+    <string name="register_have_account">Already have an account?</string>
+    <string name="register_back_to_login">Log in</string>
+    <string name="register_birthday_picker_title">Select your birthday</string>
+
+    <!-- Form fields -->
+    <string name="field_email">Email address</string>
+    <string name="field_birthday">Birthday</string>
+    <string name="field_password">Password</string>
+    <string name="field_confirm_password">Confirm password</string>
+    <string name="field_password_helper">At least 8 characters</string>
+    <string name="icon_select_birthday">Select birthday</string>
+
+    <!-- Form errors -->
+    <string name="error_email_required">Please enter your email address.</string>
+    <string name="error_email_invalid">Please enter a valid email address.</string>
+    <string name="error_email_taken">An account with this email already exists.</string>
+    <string name="error_birthday_required">Please select your birthday.</string>
+    <string name="error_birthday_invalid">Please select a valid birthday that is not in the future.</string>
+    <string name="error_password_required">Please enter your password.</string>
+    <string name="error_password_too_short">Password must be at least %1$d characters.</string>
+    <string name="error_confirm_password_required">Please confirm your password.</string>
+    <string name="error_passwords_do_not_match">Passwords do not match.</string>
+    <string name="error_invalid_credentials">Incorrect email or password.</string>
+
+    <!-- Home -->
+    <string name="home_search_hint">Search books, movies, series, music</string>
+    <string name="home_logout">Log out</string>
+    <string name="home_section_trending">Trending now</string>
+    <string name="home_section_trending_adaptations">Trending adaptations</string>
+    <string name="home_section_recently_added">Recently added</string>
+    <string name="home_section_recommended">Recommended for you</string>
+    <string name="home_see_all">See all</string>
+    <string name="home_browse_categories">Browse by category</string>
+
+    <!-- Explore -->
+    <string name="explore_title">Explore</string>
+    <string name="explore_search_hint">Title, author, director, artist, album…</string>
+    <string name="explore_reset">Reset</string>
+    <string name="explore_empty_title">No results found</string>
+    <string name="explore_empty_message">Try a different title, creator, or category.</string>
+    <string name="explore_empty_reset">Clear search and filters</string>
+    <plurals name="explore_result_count">
+        <item quantity="one">%d result</item>
+        <item quantity="other">%d results</item>
+    </plurals>
+
+    <!-- Media cards -->
+    <string name="media_cover_description">Cover of %1$s</string>
+    <string name="media_category_year_format">%1$s • %2$d</string>
+    <string name="media_rating_format">★ %1$s</string>
+
+    <!-- Bottom navigation -->
+    <string name="nav_home">Home</string>
+    <string name="nav_explore">Explore</string>
+
+    <!-- Shared -->
+    <string name="logo_description">Adapted logo</string>
 </resources>

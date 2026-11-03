@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Horizontal padding shared by all screens -->
+    <dimen name="screen_padding">20dp</dimen>
+    <!-- Width of a media card inside the horizontal lists on Home -->
+    <dimen name="media_card_width_horizontal">140dp</dimen>
+    <!-- Space around each media card -->
+    <dimen name="media_card_margin">6dp</dimen>
+</resources>
