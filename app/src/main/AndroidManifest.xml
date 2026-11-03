@@ -11,6 +11,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Adapted">
+
+        <!-- Launcher: no UI, routes to Home (logged in) or Login -->
         <activity
             android:name=".MainActivity"
             android:exported="true"
@@ -21,6 +23,31 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <!-- Implemented screens (Modules A-D) -->
+        <activity
+            android:name=".activities.LoginActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".activities.RegisterActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".activities.HomeActivity"
+            android:exported="false"
+            android:windowSoftInputMode="stateHidden|adjustResize" />
+        <activity
+            android:name=".activities.ExploreActivity"
+            android:exported="false"
+            android:windowSoftInputMode="stateHidden|adjustResize" />
+
+        <!--
+            Modules E-J (MediaDetailsActivity, RatingActivity, ComparisonActivity,
+            ReviewsActivity, CommentsActivity, MyLibraryActivity, ProfileActivity) are
+            placeholders and are intentionally NOT registered here. Each owner adds an
+            <activity> entry for their screen when they start implementing it.
+        -->
     </application>
 
 </manifest>

@@ -1,8 +1,45 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Base application theme. -->
-    <style name="Base.Theme.Adapted" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Customize your light theme here. -->
-        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+    <!--
+        Shared app theme. All screens use this theme, so colors and component styles are
+        changed here (plus colors.xml) rather than in individual layouts.
+
+        Meaning of the main Material attributes in this black-and-white design:
+          colorPrimary / colorOnPrimary ............ buttons, cursor, focused outlines
+          colorSecondaryContainer / OnSecondary... selected chip + selected bottom-nav item
+          colorSurfaceContainer* ................... light gray backgrounds (cards, nav bar)
+          colorOnSurfaceVariant .................... secondary (dark gray) text and icons
+          colorOutline / colorOutlineVariant ....... input outlines / card borders and dividers
+    -->
+    <style name="Base.Theme.Adapted" parent="Theme.Material3.Light.NoActionBar">
+        <item name="colorPrimary">@color/black</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <item name="colorPrimaryContainer">@color/gray_light</item>
+        <item name="colorOnPrimaryContainer">@color/black</item>
+
+        <item name="colorSecondary">@color/black</item>
+        <item name="colorOnSecondary">@color/white</item>
+        <item name="colorSecondaryContainer">@color/black</item>
+        <item name="colorOnSecondaryContainer">@color/white</item>
+
+        <item name="android:colorBackground">@color/white</item>
+        <item name="colorOnBackground">@color/black</item>
+        <item name="colorSurface">@color/white</item>
+        <item name="colorOnSurface">@color/black</item>
+        <item name="colorSurfaceVariant">@color/gray_light</item>
+        <item name="colorOnSurfaceVariant">@color/gray_dark</item>
+
+        <item name="colorSurfaceContainerLowest">@color/white</item>
+        <item name="colorSurfaceContainerLow">@color/gray_light</item>
+        <item name="colorSurfaceContainer">@color/gray_light</item>
+        <item name="colorSurfaceContainerHigh">@color/gray_light</item>
+        <item name="colorSurfaceContainerHighest">@color/gray_light</item>
+
+        <item name="colorOutline">@color/gray_outline</item>
+        <item name="colorOutlineVariant">@color/gray_border</item>
+
+        <item name="android:windowLightStatusBar">true</item>
+        <!-- The temporary design is light only; stop Android from auto-darkening it. -->
+        <item name="android:forceDarkAllowed" tools:targetApi="q">false</item>
     </style>
 
     <style name="Theme.Adapted" parent="Base.Theme.Adapted" />
