@@ -48,6 +48,10 @@
             placeholders and are intentionally NOT registered here. Each owner adds an
             <activity> entry for their screen when they start implementing it.
         -->
+
+            <activity android:name=".activities.MediaDetailsActivity" />
+            <activity android:name=".activities.RatingActivity" />
+            <activity android:name=".activities.ComparisonActivity" /> <!-- I added module G lang here para di mag crash -jhiro -->
     </application>
 
 </manifest>
