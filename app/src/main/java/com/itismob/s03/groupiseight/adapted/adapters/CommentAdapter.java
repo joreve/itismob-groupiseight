@@ -5,12 +5,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.button.MaterialButton;
-
 import com.itismob.s03.groupiseight.adapted.R;
 import com.itismob.s03.groupiseight.adapted.models.CommentModel;
 
@@ -70,26 +68,35 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
         CommentViewHolder(@NonNull View itemView) {
             super(itemView);
             avatarImg = itemView.findViewById(R.id.img_comment_avatar);
-            authorText = itemView.findViewById(R.id.txt_comment_author);
-            timeText = itemView.findViewById(R.id.txt_comment_time);
-            commentText = itemView.findViewById(R.id.txt_comment_text);
+
+            TextView author = itemView.findViewById(R.id.tv_comment_author);
+            authorText = author;
+
+            TextView time = itemView.findViewById(R.id.tv_comment_time);
+            timeText = time;
+
+            TextView text = itemView.findViewById(R.id.tv_comment_text);
+            commentText = text;
+
             likeBtn = itemView.findViewById(R.id.btn_comment_like);
         }
 
         void bind(CommentModel comment) {
-            authorText.setText(comment.getAuthorName());
-            timeText.setText(comment.getTimestamp());
-            commentText.setText(comment.getCommentText());
-            likeBtn.setText(String.valueOf(comment.getLikesCount()));
+            if (authorText != null) authorText.setText(comment.getAuthorName());
+            if (timeText != null) timeText.setText(comment.getTimestamp());
+            if (commentText != null) commentText.setText(comment.getCommentText());
 
-            if (comment.getAvatarResId() != 0) {
-                avatarImg.setImageResource(comment.getAvatarResId());
+            if (likeBtn != null) {
+                likeBtn.setText(comment.getLikesCount() > 0 ? String.valueOf(comment.getLikesCount()) : "");
+                likeBtn.setOnClickListener(v -> {
+                    comment.toggleLike();
+                    likeBtn.setText(comment.getLikesCount() > 0 ? String.valueOf(comment.getLikesCount()) : "");
+                });
             }
 
-            likeBtn.setOnClickListener(v -> {
-                comment.toggleLike();
-                likeBtn.setText(String.valueOf(comment.getLikesCount()));
-            });
+            if (avatarImg != null && comment.getAvatarResId() != 0) {
+                avatarImg.setImageResource(comment.getAvatarResId());
+            }
         }
     }
 }
