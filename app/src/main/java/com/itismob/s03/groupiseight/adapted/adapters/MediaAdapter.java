@@ -1,31 +1,22 @@
 package com.itismob.s03.groupiseight.adapted.adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.itismob.s03.groupiseight.adapted.R;
+import com.itismob.s03.groupiseight.adapted.activities.MediaDetailsActivity;
 import com.itismob.s03.groupiseight.adapted.models.MediaItem;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-/**
- * Shows MediaItem cards. The same card is used in two places:
- * - horizontal lists on Home (fixed card width), and
- * - the 2-column grid in Explore (card fills its grid cell).
- *
- * Cards are display-only for now: Media Details is a separate module.
- */
 public class MediaAdapter extends RecyclerView.Adapter<MediaAdapter.MediaViewHolder> {
-
     private final List<MediaItem> items = new ArrayList<>();
     private final boolean horizontalList;
 
@@ -34,7 +25,6 @@ public class MediaAdapter extends RecyclerView.Adapter<MediaAdapter.MediaViewHol
         this.horizontalList = horizontalList;
     }
 
-    /** Replaces the list contents, e.g. after the search text or category changes. */
     public void submitList(List<MediaItem> newItems) {
         items.clear();
         items.addAll(newItems);
@@ -64,7 +54,6 @@ public class MediaAdapter extends RecyclerView.Adapter<MediaAdapter.MediaViewHol
     }
 
     static class MediaViewHolder extends RecyclerView.ViewHolder {
-
         private final ImageView coverImage;
         private final TextView titleText;
         private final TextView creatorText;
@@ -101,6 +90,12 @@ public class MediaAdapter extends RecyclerView.Adapter<MediaAdapter.MediaViewHol
                     context.getString(item.getCategory().getLabelResId()), item.getYear()));
             ratingText.setText(context.getString(R.string.media_rating_format,
                     String.format(Locale.getDefault(), "%.1f", item.getRating())));
+
+            itemView.setOnClickListener(v -> {
+                Intent intent = new Intent(context, MediaDetailsActivity.class);
+                intent.putExtra("extra_media_id", item.getId());
+                context.startActivity(intent);
+            });
         }
     }
 }
