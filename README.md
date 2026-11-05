@@ -26,6 +26,20 @@ helpers/     auth, validation, search, window-inset helpers
 `CommentsActivity`, `MyLibraryActivity`, `ProfileActivity`, plus `ReviewModel`, `ReviewAdapter`,
 `ComparisonModel`, `CommentModel`, `CommentAdapter` and their XML layouts are empty shells.
 
+## Modules E–J
+
+E. Media Details
+
+F. Rating and Reviewing
+
+G. Adaptation Comparison
+
+H. Reviews and Community Interaction
+
+I. Personal Media Library / Tracking
+
+J. User Profile
+
 When you start your module:
 1. Add an `<activity>` entry for your screen in `AndroidManifest.xml` (placeholders are deliberately not registered).
 2. Add your destination to `res/menu/menu_bottom_nav.xml` if it belongs in the bottom bar, and handle it in `HomeActivity` / `ExploreActivity`.
