@@ -1,5 +1,81 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Placeholder item layout - to be designed by the assigned group member. -->
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    style="@style/Widget.Adapted.SurfaceCard"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content" />
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="8dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="12dp">
+
+        <!-- Comment Header: Avatar, Author, Time -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="6dp">
+
+            <ImageView
+                android:id="@+id/img_comment_avatar"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:background="@drawable/bg_category_icon"
+                android:padding="6dp"
+                android:src="@drawable/ic_adapted_logo"
+                android:contentDescription="User Avatar" />
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginStart="10dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/txt_comment_author"
+                    style="@style/TextAppearance.Adapted.CardTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="13sp"
+                    tools:text="Alex R." />
+
+                <TextView
+                    android:id="@+id/txt_comment_time"
+                    style="@style/TextAppearance.Adapted.Secondary"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="11sp"
+                    tools:text="2 hours ago" />
+            </LinearLayout>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_comment_like"
+                style="@style/Widget.Material3.Button.TextButton.Icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:minWidth="0dp"
+                android:paddingHorizontal="8dp"
+                android:textSize="12sp"
+                app:icon="@drawable/ic_adapted_logo"
+                app:iconSize="14dp"
+                tools:text="14" />
+        </LinearLayout>
+
+        <!-- Comment Body -->
+        <TextView
+            android:id="@+id/txt_comment_text"
+            style="@style/TextAppearance.Adapted.Body"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="13sp"
+            tools:text="The cinematography in Denis Villeneuve's Dune captured the ecological grandeur of Frank Herbert's desert world better than any previous version." />
+
+    </LinearLayout>
+</com.google.android.material.card.MaterialCardView>

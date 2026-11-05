@@ -1,5 +1,478 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Placeholder layout - to be designed by the assigned group member. -->
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/comparison_root"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" />
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="?android:attr/colorBackground">
+
+    <!-- Top Toolbar -->
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/comparison_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/colorSurface"
+        app:navigationIcon="?attr/homeAsUpIndicator"
+        app:title="@string/comparison_title"
+        app:titleTextAppearance="@style/TextAppearance.Adapted.SectionTitle" />
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <!-- Pair Selector -->
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/layout_pair_selector"
+                style="@style/Widget.Adapted.TextInput"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="14dp"
+                android:hint="@string/comparison_select_pair_hint"
+                app:endIconMode="dropdown_menu">
+
+                <AutoCompleteTextView
+                    android:id="@+id/spinner_comparison_pairs"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="none"
+                    android:padding="12dp"
+                    android:textSize="14sp" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <!-- Side-by-side Media Comparison Header Cards -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:baselineAligned="false"
+                android:layout_marginBottom="12dp">
+
+                <!-- Source Card (Primary Highlighted Focus) -->
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/card_source_media"
+                    style="@style/Widget.Adapted.Card"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:clickable="true"
+                    android:focusable="true"
+                    app:strokeColor="?attr/colorPrimary"
+                    app:strokeWidth="2dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <ImageView
+                            android:id="@+id/img_source_cover"
+                            android:layout_width="match_parent"
+                            android:layout_height="130dp"
+                            android:scaleType="centerCrop"
+                            android:contentDescription="@string/comparison_badge_original"
+                            tools:src="@drawable/cover_book_dune" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:padding="8dp">
+
+                            <TextView
+                                android:id="@+id/txt_source_badge"
+                                style="@style/TextAppearance.Adapted.Secondary"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/comparison_badge_original"
+                                android:textStyle="bold"
+                                android:textColor="?attr/colorPrimary"
+                                android:textSize="11sp"
+                                android:textAllCaps="true" />
+
+                            <TextView
+                                android:id="@+id/txt_source_title"
+                                style="@style/TextAppearance.Adapted.CardTitle"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:maxLines="2"
+                                android:ellipsize="end"
+                                android:textSize="13sp"
+                                tools:text="Dune" />
+
+                            <TextView
+                                android:id="@+id/txt_source_creator"
+                                style="@style/TextAppearance.Adapted.Secondary"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:maxLines="1"
+                                android:ellipsize="end"
+                                android:textSize="11sp"
+                                tools:text="Frank Herbert" />
+
+                            <TextView
+                                android:id="@+id/txt_source_meta"
+                                style="@style/TextAppearance.Adapted.Secondary"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:textSize="11sp"
+                                tools:text="Book • 1965 • ★ 4.4" />
+
+                            <TextView
+                                style="@style/TextAppearance.Adapted.Secondary"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="2dp"
+                                android:text="@string/comparison_view_details"
+                                android:textColor="?attr/colorPrimary"
+                                android:textSize="11sp"
+                                android:textStyle="bold" />
+                        </LinearLayout>
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+                <!-- VS Badge -->
+                <TextView
+                    android:id="@+id/txt_vs_badge"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_marginHorizontal="6dp"
+                    android:background="@drawable/bg_category_icon"
+                    android:gravity="center"
+                    android:text="@string/comparison_vs"
+                    android:textColor="?attr/colorOnSurface"
+                    android:textSize="12sp"
+                    android:textStyle="bold" />
+
+                <!-- Target Card (Secondary/Neutral) -->
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/card_target_media"
+                    style="@style/Widget.Adapted.Card"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:clickable="true"
+                    android:focusable="true"
+                    app:strokeColor="?attr/colorOutlineVariant"
+                    app:strokeWidth="1dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <ImageView
+                            android:id="@+id/img_target_cover"
+                            android:layout_width="match_parent"
+                            android:layout_height="130dp"
+                            android:scaleType="centerCrop"
+                            android:contentDescription="@string/comparison_badge_adaptation"
+                            tools:src="@drawable/cover_movie_dune" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:padding="8dp">
+
+                            <TextView
+                                android:id="@+id/txt_target_badge"
+                                style="@style/TextAppearance.Adapted.Secondary"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/comparison_badge_adaptation"
+                                android:textStyle="bold"
+                                android:textColor="?attr/colorOnSurfaceVariant"
+                                android:textSize="11sp"
+                                android:textAllCaps="true" />
+
+                            <TextView
+                                android:id="@+id/txt_target_title"
+                                style="@style/TextAppearance.Adapted.CardTitle"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:maxLines="2"
+                                android:ellipsize="end"
+                                android:textSize="13sp"
+                                tools:text="Dune" />
+
+                            <TextView
+                                android:id="@+id/txt_target_creator"
+                                style="@style/TextAppearance.Adapted.Secondary"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:maxLines="1"
+                                android:ellipsize="end"
+                                android:textSize="11sp"
+                                tools:text="Denis Villeneuve" />
+
+                            <TextView
+                                android:id="@+id/txt_target_meta"
+                                style="@style/TextAppearance.Adapted.Secondary"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:textSize="11sp"
+                                tools:text="Movie • 2021 • ★ 4.3" />
+
+                            <TextView
+                                style="@style/TextAppearance.Adapted.Secondary"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="2dp"
+                                android:text="@string/comparison_view_details"
+                                android:textColor="?attr/colorPrimary"
+                                android:textSize="11sp"
+                                android:textStyle="bold" />
+                        </LinearLayout>
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+            </LinearLayout>
+
+            <!-- Swap Sides Button -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_swap_comparison"
+                style="@style/Widget.Material3.Button.OutlinedButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="14dp"
+                android:text="@string/comparison_swap"
+                app:strokeColor="?attr/colorOutlineVariant" />
+
+            <!-- Faithfulness Summary Card -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/card_verdict"
+                style="@style/Widget.Adapted.SurfaceCard"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="14dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="14dp">
+
+                    <TextView
+                        style="@style/TextAppearance.Adapted.SectionTitle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/comparison_faithfulness_title"
+                        android:textSize="15sp"
+                        android:layout_marginBottom="6dp" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:layout_marginBottom="6dp">
+
+                        <TextView
+                            android:id="@+id/txt_faithfulness_score"
+                            style="@style/TextAppearance.Adapted.Display"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="12dp"
+                            android:textSize="24sp"
+                            tools:text="92%" />
+
+                        <com.google.android.material.progressindicator.LinearProgressIndicator
+                            android:id="@+id/progress_faithfulness"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            app:trackCornerRadius="4dp"
+                            app:trackThickness="8dp"
+                            tools:progress="92" />
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/txt_comparison_verdict"
+                        style="@style/TextAppearance.Adapted.Body"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textSize="13sp"
+                        tools:text="Visually breathtaking adaptation..." />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Community Poll Card -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/card_community_poll"
+                style="@style/Widget.Adapted.SurfaceCard"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="14dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="14dp">
+
+                    <TextView
+                        style="@style/TextAppearance.Adapted.SectionTitle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/comparison_community_title"
+                        android:textSize="15sp" />
+
+                    <TextView
+                        style="@style/TextAppearance.Adapted.Secondary"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/comparison_community_subtitle"
+                        android:layout_marginBottom="10dp"
+                        android:textSize="12sp" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_marginBottom="10dp">
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btn_vote_source"
+                            style="@style/Widget.Adapted.Button"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:layout_marginEnd="6dp"
+                            tools:text="Vote Book (1,840)" />
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btn_vote_target"
+                            style="@style/Widget.Adapted.Button"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:layout_marginStart="6dp"
+                            tools:text="Vote Movie (1,620)" />
+                    </LinearLayout>
+
+                    <com.google.android.material.progressindicator.LinearProgressIndicator
+                        android:id="@+id/progress_community_poll"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="6dp"
+                        app:trackCornerRadius="4dp"
+                        app:trackThickness="8dp"
+                        tools:progress="53" />
+
+                    <TextView
+                        android:id="@+id/txt_vote_status"
+                        style="@style/TextAppearance.Adapted.Secondary"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:textSize="12sp"
+                        tools:text="53% prefer Book • 47% prefer Movie" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Detailed Breakdown Title -->
+            <TextView
+                style="@style/TextAppearance.Adapted.SectionTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/comparison_aspects_title"
+                android:textSize="15sp"
+                android:layout_marginBottom="10dp" />
+
+            <!-- Aspects RecyclerView -->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_comparison_aspects"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:nestedScrollingEnabled="false"
+                android:layout_marginBottom="16dp" />
+
+            <!-- Adaptation Discussion / Comments Section Card -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/card_adaptation_comments"
+                style="@style/Widget.Adapted.SurfaceCard"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="24dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="14dp">
+
+                    <TextView
+                        style="@style/TextAppearance.Adapted.SectionTitle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/comparison_comments_title"
+                        android:textSize="15sp" />
+
+                    <TextView
+                        style="@style/TextAppearance.Adapted.Secondary"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/comparison_comments_subtitle"
+                        android:layout_marginBottom="12dp"
+                        android:textSize="12sp" />
+
+                    <!-- Comment Composer Box -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:layout_marginBottom="12dp">
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/layout_comment_input"
+                            style="@style/Widget.Adapted.TextInput"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:hint="@string/comparison_comment_hint">
+
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/et_comment_input"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:inputType="textCapSentences|textMultiLine"
+                                android:maxLines="3"
+                                android:textSize="13sp" />
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btn_post_comment"
+                            style="@style/Widget.Adapted.Button"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="8dp"
+                            android:text="@string/comparison_post_comment" />
+                    </LinearLayout>
+
+                    <!-- Comments List -->
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rv_comparison_comments"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:nestedScrollingEnabled="false" />
+
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+
+</LinearLayout>
