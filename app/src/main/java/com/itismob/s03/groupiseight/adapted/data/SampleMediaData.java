@@ -1,9 +1,12 @@
 package com.itismob.s03.groupiseight.adapted.data;
 
 import com.itismob.s03.groupiseight.adapted.R;
+import com.itismob.s03.groupiseight.adapted.models.CommentModel;
 import com.itismob.s03.groupiseight.adapted.models.MediaCategory;
 import com.itismob.s03.groupiseight.adapted.models.MediaItem;
+import com.itismob.s03.groupiseight.adapted.models.ReviewModel;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -274,5 +277,78 @@ public final class SampleMediaData {
         return Collections.unmodifiableList(Arrays.asList(
                 BOOK_DUNE, BOOK_GAME_OF_THRONES, MOVIE_PRIDE_AND_PREJUDICE, MUSIC_BOHEMIAN_RHAPSODY,
                 BOOK_THE_LAST_WISH, BOOK_GONE_GIRL, MUSIC_HOTEL_CALIFORNIA, BOOK_LITTLE_WOMEN));
+    }
+
+    // --- Module H: Sample Community Data ---
+
+    private static final List<ReviewModel> SAMPLE_REVIEWS = new ArrayList<>(Arrays.asList(
+            new ReviewModel(101, 2, "Elena Rostova", 5.0f, "Denis Villeneuve captured the grandeur of Herbert's universe perfectly! The score by Hans Zimmer elevates every single scene.", "Oct 24, 2023", 42, 3, false),
+            new ReviewModel(102, 2, "Marcus Vance", 4.0f, "A cinematic masterpiece, though pacing slows down in the middle section. Excellent world building nonetheless.", "Nov 02, 2023", 18, 1, false),
+            new ReviewModel(103, 1, "Sophia Chen", 4.5f, "An intense, faithful adaptation of Collins' novel. Jennifer Lawrence was phenomenal as Katniss Everdeen.", "Jan 12, 2024", 29, 2, false),
+            new ReviewModel(104, 25, "Clara Oswald", 4.0f, "Addictive costume drama! Gorgeous aesthetics and fantastic string quartet pop covers.", "Dec 18, 2023", 15, 0, false),
+            new ReviewModel(105, 20, "David Miller", 5.0f, "An unbelievable piece of modern cinema. Masterclass in suspense and social commentary.", "Feb 05, 2024", 56, 4, false)
+    ));
+
+    private static final List<CommentModel> SAMPLE_COMMENTS = new ArrayList<>(Arrays.asList(
+            new CommentModel(201, 101, "Liam Thorne", "Totally agree about Zimmer's soundtrack! The sardaukar chant still gives me chills.", "2 hours ago"),
+            new CommentModel(202, 101, "Hannah Abbott", "The visuals in IMAX were unreal. Can't wait for Part Two!", "1 day ago"),
+            new CommentModel(203, 101, "Alex Mercer", "Do you think it adapted the book better than the 1984 film?", "2 days ago"),
+            new CommentModel(204, 102, "Chloe Bennet", "Fair point about the pacing, but the world building makes up for it.", "3 days ago"),
+            new CommentModel(205, 103, "Ryan Gosling Fan", "The arena scenes were shot so well. Catching Fire was even better!", "4 days ago")
+    ));
+
+    public static List<ReviewModel> getReviewsForMedia(int mediaId) {
+        List<ReviewModel> filtered = new ArrayList<>();
+        for (ReviewModel review : SAMPLE_REVIEWS) {
+            if (review.getMediaId() == mediaId) {
+                filtered.add(review);
+            }
+        }
+        return filtered;
+    }
+
+    public static ReviewModel getReviewById(int reviewId) {
+        for (ReviewModel review : SAMPLE_REVIEWS) {
+            if (review.getId() == reviewId) {
+                return review;
+            }
+        }
+        return null;
+    }
+
+    public static List<CommentModel> getCommentsForReview(int reviewId) {
+        List<CommentModel> filtered = new ArrayList<>();
+        for (CommentModel comment : SAMPLE_COMMENTS) {
+            if (comment.getReviewId() == reviewId) {
+                filtered.add(comment);
+            }
+        }
+        return filtered;
+    }
+
+    public static void toggleReviewLike(int reviewId) {
+        ReviewModel review = getReviewById(reviewId);
+        if (review != null) {
+            review.toggleLike();
+        }
+    }
+
+    public static CommentModel addComment(int reviewId, String authorName, String commentText) {
+        int newId = 200 + SAMPLE_COMMENTS.size() + 1;
+        CommentModel newComment = new CommentModel(newId, reviewId, authorName, commentText, "Just now");
+        SAMPLE_COMMENTS.add(newComment);
+
+        ReviewModel review = getReviewById(reviewId);
+        if (review != null) {
+            review.incrementCommentCount();
+        }
+        return newComment;
+    }
+
+    public static ReviewModel addReview(int mediaId, String authorName, float rating, String reviewText) {
+        int newId = 100 + SAMPLE_REVIEWS.size() + 1;
+        ReviewModel newReview = new ReviewModel(newId, mediaId, authorName, rating, reviewText, "Just now", 0, 0, false);
+        SAMPLE_REVIEWS.add(newReview);
+        return newReview;
     }
 }
