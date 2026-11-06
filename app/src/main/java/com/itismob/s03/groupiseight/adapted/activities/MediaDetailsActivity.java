@@ -42,6 +42,15 @@ public class MediaDetailsActivity extends AppCompatActivity {
             startActivity(intent);
         });
 
+        View btnViewReviews = findViewById(R.id.btn_view_reviews);
+        if (btnViewReviews != null) {
+            btnViewReviews.setOnClickListener(v -> {
+                Intent intent = new Intent(this, ReviewsActivity.class);
+                intent.putExtra(ReviewsActivity.EXTRA_MEDIA_ID, item.getId());
+                startActivity(intent);
+            });
+        }
+
         MaterialButton compareBtn = findViewById(R.id.btn_compare_adaptation);
         if (item.getLinkedMediaId() != null) {
             compareBtn.setVisibility(View.VISIBLE);

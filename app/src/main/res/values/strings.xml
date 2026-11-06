@@ -78,6 +78,43 @@
     <string name="nav_home">Home</string>
     <string name="nav_explore">Explore</string>
 
+    <!-- Comparison -->
+    <string name="comparison_title">Adaptation Comparison</string>
+    <string name="comparison_select_pair_hint">Select media comparison pair</string>
+    <string name="comparison_badge_original">Original Work</string>
+    <string name="comparison_badge_adaptation">Adaptation</string>
+    <string name="comparison_vs">VS</string>
+    <string name="comparison_swap">Swap Sides</string>
+    <string name="comparison_faithfulness_title">Adaptation Faithfulness</string>
+    <string name="comparison_community_title">Community Preference Poll</string>
+    <string name="comparison_community_subtitle">Which version do you prefer?</string>
+    <string name="comparison_vote_source_format">Vote %1$s (%2$s)</string>
+    <string name="comparison_vote_target_format">Vote %1$s (%2$s)</string>
+    <string name="comparison_vote_status_format">%1$d%% prefer %2$s • %3$d%% prefer %4$s</string>
+    <string name="comparison_voted_source">You voted for %1$s!</string>
+    <string name="comparison_voted_target">You voted for %1$s!</string>
+    <string name="comparison_view_details">View Details →</string>
+    <string name="comparison_aspects_title">Detailed Aspect Breakdown</string>
+    <string name="comparison_match_format">%1$d%% Match</string>
+    <string name="comparison_primary_focus_badge">★ PRIMARY FOCUS</string>
+    <string name="comparison_comments_title">Adaptation Discussion</string>
+    <string name="comparison_comments_subtitle">Share your thoughts on this adaptation</string>
+    <string name="comparison_comment_hint">Write a comment on this adaptation...</string>
+    <string name="comparison_post_comment">Post</string>
+    <string name="comparison_comment_posted">Comment posted!</string>
+
     <!-- Shared -->
     <string name="logo_description">Adapted logo</string>
+
+    <!-- Module H: Community & Reviews -->
+    <string name="reviews_title">Community Reviews</string>
+    <string name="reviews_empty_title">No reviews yet</string>
+    <string name="reviews_empty_message">Be the first to share your review for this media!</string>
+    <string name="btn_write_review">Write a Review</string>
+    <string name="btn_view_reviews">View Community Reviews</string>
+    <string name="comments_title">Comments</string>
+    <string name="comments_empty_title">No comments yet</string>
+    <string name="comments_empty_message">Start the conversation by adding a comment below!</string>
+    <string name="comment_hint">Add a comment…</string>
+    <string name="btn_send">Send</string>
 </resources>
