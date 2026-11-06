@@ -1,5 +1,347 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Placeholder layout - to be designed by the assigned group member. -->
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/library_root"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" />
+    android:layout_height="match_parent"
+    android:background="?android:attr/colorBackground"
+    android:orientation="vertical"
+    tools:context=".activities.MyLibraryActivity">
+
+    <TextView
+        style="@style/TextAppearance.Adapted.Display"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingStart="@dimen/screen_padding"
+        android:paddingTop="12dp"
+        android:paddingEnd="@dimen/screen_padding"
+        android:text="@string/library_title" />
+
+    <!-- Library Stats Summary Card -->
+    <com.google.android.material.card.MaterialCardView
+        style="@style/Widget.Adapted.SurfaceCard"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/screen_padding"
+        android:layout_marginTop="12dp"
+        android:layout_marginEnd="@dimen/screen_padding">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:baselineAligned="false"
+            android:orientation="horizontal"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/stat_total_count"
+                    style="@style/TextAppearance.Adapted.SectionTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="0" />
+
+                <TextView
+                    style="@style/TextAppearance.Adapted.Secondary"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/library_stat_total" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:background="?attr/colorOutlineVariant" />
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/stat_consuming_count"
+                    style="@style/TextAppearance.Adapted.SectionTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="0" />
+
+                <TextView
+                    style="@style/TextAppearance.Adapted.Secondary"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/library_stat_consuming" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:background="?attr/colorOutlineVariant" />
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/stat_completed_count"
+                    style="@style/TextAppearance.Adapted.SectionTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="0" />
+
+                <TextView
+                    style="@style/TextAppearance.Adapted.Secondary"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/library_stat_completed" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:background="?attr/colorOutlineVariant" />
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/stat_plan_count"
+                    style="@style/TextAppearance.Adapted.SectionTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="0" />
+
+                <TextView
+                    style="@style/TextAppearance.Adapted.Secondary"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/library_stat_plan" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:background="?attr/colorOutlineVariant" />
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/stat_dropped_count"
+                    style="@style/TextAppearance.Adapted.SectionTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="0" />
+
+                <TextView
+                    style="@style/TextAppearance.Adapted.Secondary"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/library_stat_dropped" />
+            </LinearLayout>
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
+
+    <!-- Row 1: Tracking Status Chips -->
+    <HorizontalScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:clipToPadding="false"
+        android:paddingStart="@dimen/screen_padding"
+        android:paddingEnd="@dimen/screen_padding"
+        android:scrollbars="none">
+
+        <com.google.android.material.chip.ChipGroup
+            android:id="@+id/library_status_chips"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:selectionRequired="true"
+            app:singleLine="true"
+            app:singleSelection="true">
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chip_status_all"
+                style="@style/Widget.Adapted.Chip"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="true"
+                android:text="@string/library_filter_all" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chip_status_consuming"
+                style="@style/Widget.Adapted.Chip"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/library_filter_currently_consuming" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chip_status_completed"
+                style="@style/Widget.Adapted.Chip"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/library_filter_completed" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chip_status_plan"
+                style="@style/Widget.Adapted.Chip"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/library_filter_plan_to_consume" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chip_status_dropped"
+                style="@style/Widget.Adapted.Chip"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/library_filter_dropped" />
+        </com.google.android.material.chip.ChipGroup>
+    </HorizontalScrollView>
+
+    <!-- Row 2: Media Type Chips -->
+    <HorizontalScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:clipToPadding="false"
+        android:paddingStart="@dimen/screen_padding"
+        android:paddingEnd="@dimen/screen_padding"
+        android:scrollbars="none">
+
+        <com.google.android.material.chip.ChipGroup
+            android:id="@+id/library_type_chips"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:selectionRequired="true"
+            app:singleLine="true"
+            app:singleSelection="true">
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chip_type_all"
+                style="@style/Widget.Adapted.Chip"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="true"
+                android:text="@string/category_all" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chip_type_books"
+                style="@style/Widget.Adapted.Chip"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/category_books_plural" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chip_type_movies"
+                style="@style/Widget.Adapted.Chip"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/category_movies_plural" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chip_type_tv_series"
+                style="@style/Widget.Adapted.Chip"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/category_tv_series" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chip_type_music"
+                style="@style/Widget.Adapted.Chip"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/category_music" />
+        </com.google.android.material.chip.ChipGroup>
+    </HorizontalScrollView>
+
+    <TextView
+        android:id="@+id/library_result_count"
+        style="@style/TextAppearance.Adapted.Body"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingStart="@dimen/screen_padding"
+        android:paddingTop="4dp"
+        android:paddingEnd="@dimen/screen_padding"
+        android:paddingBottom="4dp" />
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/library_results"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clipToPadding="false"
+            android:paddingStart="14dp"
+            android:paddingEnd="14dp"
+            android:paddingBottom="12dp" />
+
+        <!-- Empty state when no item matches the selected status / type -->
+        <LinearLayout
+            android:id="@+id/library_empty_state"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:padding="32dp"
+            android:visibility="gone">
+
+            <ImageView
+                android:layout_width="64dp"
+                android:layout_height="64dp"
+                android:importantForAccessibility="no"
+                android:src="@drawable/ic_nav_my_library" />
+
+            <TextView
+                style="@style/TextAppearance.Adapted.SectionTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:text="@string/library_empty_title" />
+
+            <TextView
+                style="@style/TextAppearance.Adapted.Body"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:gravity="center"
+                android:text="@string/library_empty_message" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/library_empty_explore_button"
+                style="@style/Widget.Material3.Button.OutlinedButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="@string/library_empty_button" />
+        </LinearLayout>
+    </FrameLayout>
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottom_navigation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:menu="@menu/menu_bottom_nav" />
+</LinearLayout>

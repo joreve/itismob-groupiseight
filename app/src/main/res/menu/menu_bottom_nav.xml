@@ -5,8 +5,19 @@
         android:id="@+id/nav_home"
         android:icon="@drawable/ic_nav_home"
         android:title="@string/nav_home" />
+
     <item
         android:id="@+id/nav_explore"
         android:icon="@drawable/ic_nav_explore"
         android:title="@string/nav_explore" />
+
+    <item
+        android:id="@+id/nav_my_library"
+        android:icon="@drawable/ic_nav_my_library"
+        android:title="@string/nav_my_library" />
+
+    <item
+        android:id="@+id/nav_profile"
+        android:icon="@drawable/ic_nav_profile"
+        android:title="@string/nav_profile" />
 </menu>

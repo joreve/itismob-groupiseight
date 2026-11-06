@@ -85,7 +85,14 @@ public class HomeActivity extends AppCompatActivity {
             if (item.getItemId() == R.id.nav_explore) {
                 openExplore(null, false);
                 return false; // keep Home highlighted; Explore opens as its own screen
+            } else if (item.getItemId() == R.id.nav_my_library) {
+                openMyLibrary();
+                return false;
+            } else if (item.getItemId() == R.id.nav_profile) {
+                openProfile();
+                return false;
             }
+
             return true;
         });
     }
@@ -102,6 +109,16 @@ public class HomeActivity extends AppCompatActivity {
             intent.putExtra(ExploreActivity.EXTRA_CATEGORY, category.name());
         }
         intent.putExtra(ExploreActivity.EXTRA_FOCUS_SEARCH, focusSearch);
+        startActivity(intent);
+    }
+
+    private void openMyLibrary() {
+        Intent intent = new Intent(this, MyLibraryActivity.class);
+        startActivity(intent);
+    }
+
+    private void openProfile() {
+        Intent intent = new Intent(this, ProfileActivity.class);
         startActivity(intent);
     }
 
