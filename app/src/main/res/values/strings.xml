@@ -69,6 +69,42 @@
         <item quantity="other">%d results</item>
     </plurals>
 
+    <!-- Profile -->
+    <string name="profile_title">Profile</string>
+    <string name="profile_default_email">user@example.com</string>
+    <string name="profile_member_since">Member since 2024</string>
+    <string name="profile_bio">Avid reader, movie buff &amp; music enthusiast</string>
+    <string name="profile_stat_tracked">Tracked</string>
+    <string name="profile_stat_reviews">Reviews</string>
+    <string name="profile_stat_comparisons">Comparisons</string>
+    <string name="profile_stat_favorites">Favorites</string>
+    <string name="profile_section_favorites">Favorite Adaptations</string>
+    <string name="profile_section_account">Account &amp; Settings</string>
+    <string name="profile_edit_profile">Edit Profile</string>
+    <string name="profile_preferences">Preferences &amp; Notifications</string>
+    <string name="profile_help_support">Help &amp; Support</string>
+    <string name="profile_logout">Log out</string>
+
+    <!-- My Library -->
+    <string name="library_title">My Library</string>
+    <string name="library_filter_all">All Statuses</string>
+    <string name="library_filter_currently_consuming">Currently Consuming</string>
+    <string name="library_filter_completed">Completed</string>
+    <string name="library_filter_plan_to_consume">Plan to Consume</string>
+    <string name="library_filter_dropped">Dropped</string>
+    <string name="library_stat_total">Total</string>
+    <string name="library_stat_consuming">Consuming</string>
+    <string name="library_stat_completed">Completed</string>
+    <string name="library_stat_plan">Plan</string>
+    <string name="library_stat_dropped">Dropped</string>
+    <string name="library_empty_title">No items in this filter</string>
+    <string name="library_empty_message">Add books, movies, series, or music to track your progress.</string>
+    <string name="library_empty_button">Explore Media</string>
+    <plurals name="library_result_count">
+        <item quantity="one">%d item in library</item>
+        <item quantity="other">%d items in library</item>
+    </plurals>
+
     <!-- Media cards -->
     <string name="media_cover_description">Cover of %1$s</string>
     <string name="media_category_year_format">%1$s • %2$d</string>
@@ -77,6 +113,8 @@
     <!-- Bottom navigation -->
     <string name="nav_home">Home</string>
     <string name="nav_explore">Explore</string>
+    <string name="nav_profile">Profile</string>
+    <string name="nav_my_library">My Library</string>
 
     <!-- Shared -->
     <string name="logo_description">Adapted logo</string>

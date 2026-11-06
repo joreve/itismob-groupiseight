@@ -49,9 +49,18 @@
             <activity> entry for their screen when they start implementing it.
         -->
 
-            <activity android:name=".activities.MediaDetailsActivity" />
-            <activity android:name=".activities.RatingActivity" />
-            <activity android:name=".activities.ComparisonActivity" /> <!-- I added module G lang here para di mag crash -jhiro -->
+        <activity
+            android:name=".activities.MyLibraryActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".activities.ProfileActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
+
+        <activity android:name=".activities.MediaDetailsActivity" />
+        <activity android:name=".activities.RatingActivity" />
+        <activity android:name=".activities.ComparisonActivity" /> <!-- I added module G lang here para di mag crash -jhiro -->
     </application>
 
 </manifest>

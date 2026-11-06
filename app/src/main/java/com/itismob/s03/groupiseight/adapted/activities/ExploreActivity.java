@@ -115,6 +115,14 @@ public class ExploreActivity extends AppCompatActivity {
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
                 startActivity(intent);
                 return false;
+            } else if (item.getItemId() == R.id.nav_my_library) {
+                Intent intent = new Intent(this, MyLibraryActivity.class);
+                startActivity(intent);
+                return false;
+            } else if (item.getItemId() == R.id.nav_profile) {
+                Intent intent = new Intent(this, ProfileActivity.class);
+                startActivity(intent);
+                return false;
             }
             return true;
         });
