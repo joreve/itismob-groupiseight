@@ -379,7 +379,7 @@ public class ComparisonActivity extends AppCompatActivity {
                 "You",
                 "Just now",
                 text,
-                R.drawable.ic_adapted_logo,
+                R.drawable.ic_adapted_logo_dark,
                 pairKey,
                 0
         );
@@ -397,29 +397,29 @@ public class ComparisonActivity extends AppCompatActivity {
             // Dune
             currentComments.add(new CommentModel(1, "Marcus V.", "2 hours ago",
                     "Denis Villeneuve captured the scale of Arrakis insanely well. The book's internal monologues were translated into Hans Zimmer's score and visual pacing.",
-                    R.drawable.ic_adapted_logo, pairKey, 24));
+                    R.drawable.ic_adapted_logo_dark, pairKey, 24));
             currentComments.add(new CommentModel(2, "Elena R.", "5 hours ago",
                     "The book spends so much time on ecology and water discipline that felt slightly trimmed in the movie, but visually it's a masterpiece.",
-                    R.drawable.ic_adapted_logo, pairKey, 18));
+                    R.drawable.ic_adapted_logo_dark, pairKey, 18));
             currentComments.add(new CommentModel(3, "David K.", "1 day ago",
                     "Splitting Dune into two parts was the best decision for a faithful adaptation!",
-                    R.drawable.ic_adapted_logo, pairKey, 31));
+                    R.drawable.ic_adapted_logo_dark, pairKey, 31));
         } else if (currentSourceId == 1 || currentTargetId == 1) {
             // Hunger Games
             currentComments.add(new CommentModel(4, "Sarah T.", "3 hours ago",
                     "Jennifer Lawrence embodied Katniss's internal trauma perfectly even without the first-person narrator voice.",
-                    R.drawable.ic_adapted_logo, pairKey, 15));
+                    R.drawable.ic_adapted_logo_dark, pairKey, 15));
             currentComments.add(new CommentModel(5, "Chris M.", "6 hours ago",
                     "Adding the Gamemaker control room scenes behind the scenes made the movie adaptation even richer than the book POV.",
-                    R.drawable.ic_adapted_logo, pairKey, 22));
+                    R.drawable.ic_adapted_logo_dark, pairKey, 22));
         } else {
             // Default sample comments
             currentComments.add(new CommentModel(6, "Jordan P.", "4 hours ago",
                     "The adaptation captures the main dramatic arcs well while tailoring the story pacing for the screen.",
-                    R.drawable.ic_adapted_logo, pairKey, 12));
+                    R.drawable.ic_adapted_logo_dark, pairKey, 12));
             currentComments.add(new CommentModel(7, "Taylor S.", "8 hours ago",
                     "Great character performances that bring the original work to life!",
-                    R.drawable.ic_adapted_logo, pairKey, 9));
+                    R.drawable.ic_adapted_logo_dark, pairKey, 9));
         }
 
         if (commentAdapter != null) {

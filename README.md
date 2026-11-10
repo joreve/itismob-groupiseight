@@ -48,4 +48,5 @@ When you start your module:
 ## Theming
 Change colors in `res/values/colors.xml` and the mapping in `res/values/themes.xml`. Component and text
 styles live in `res/values/styles.xml`. Layouts use `?attr/...` theme attributes, not raw colors.
+
 Accent Color: https://www.pantone.com/color-finder/13-1145-tn
