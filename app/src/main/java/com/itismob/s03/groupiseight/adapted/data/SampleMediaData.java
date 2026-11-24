@@ -252,7 +252,8 @@ public final class SampleMediaData {
                 return item;
             }
         }
-        return null;
+        // Not a sample item: it may be a temporary API result (details/rating/reviews use this lookup).
+        return com.itismob.s03.groupiseight.adapted.api.ApiMediaCache.get(id);
     }
 
     public static List<MediaItem> getTrendingMedia() {

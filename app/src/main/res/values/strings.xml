@@ -51,6 +51,10 @@
     <string name="home_search_hint">Search books, movies, series, music</string>
     <string name="home_logout">Log out</string>
     <string name="home_section_trending">Trending now</string>
+    <string name="home_section_popular_books">Popular books</string>
+    <string name="home_section_popular_movies">Popular movies</string>
+    <string name="home_section_popular_tv">Popular TV shows</string>
+    <string name="home_section_popular_music">Popular music</string>
     <string name="home_section_trending_adaptations">Trending adaptations</string>
     <string name="home_section_recently_added">Recently added</string>
     <string name="home_section_recommended">Recommended for you</string>
@@ -60,6 +64,8 @@
     <!-- Explore -->
     <string name="explore_title">Explore</string>
     <string name="explore_search_hint">Title, author, director, artist, album…</string>
+    <string name="explore_searching">Searching…</string>
+    <string name="explore_search_error">Couldn\'t reach the media services. Showing local results.</string>
     <string name="explore_reset">Reset</string>
     <string name="explore_empty_title">No results found</string>
     <string name="explore_empty_message">Try a different title, creator, or category.</string>

@@ -11,6 +11,7 @@ import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.button.MaterialButton;
 import com.itismob.s03.groupiseight.adapted.R;
 import com.itismob.s03.groupiseight.adapted.data.SampleMediaData;
+import com.itismob.s03.groupiseight.adapted.helpers.CoverLoader;
 import com.itismob.s03.groupiseight.adapted.models.MediaItem;
 
 public class MediaDetailsActivity extends AppCompatActivity {
@@ -31,7 +32,7 @@ public class MediaDetailsActivity extends AppCompatActivity {
             return;
         }
 
-        ((ImageView) findViewById(R.id.details_cover)).setImageResource(item.getCoverResId());
+        CoverLoader.load((ImageView) findViewById(R.id.details_cover), item);
         ((TextView) findViewById(R.id.details_title)).setText(item.getTitle());
         ((TextView) findViewById(R.id.details_creator)).setText(item.getCreator());
         ((TextView) findViewById(R.id.details_metadata)).setText(item.getYear() + " • Rating: " + item.getRating());
