@@ -86,6 +86,27 @@ public final class MediaApiService {
         runAll(tasks, callback);
     }
 
+    /**
+     * Explore with no search text: popular media for one category, or all four when category is null.
+     * Books: Google Books (fiction), Movies/TV: TMDB popular, Music: iTunes search.
+     */
+    public static void browse(MediaCategory category, Callback callback) {
+        List<Task> tasks = new ArrayList<>();
+        if (category == null || category == MediaCategory.BOOK) {
+            tasks.add(() -> booksSearch("subject:fiction"));
+        }
+        if (category == null || category == MediaCategory.MOVIE) {
+            tasks.add(() -> tmdb("/movie/popular", "", MediaCategory.MOVIE));
+        }
+        if (category == null || category == MediaCategory.TV_SERIES) {
+            tasks.add(() -> tmdb("/tv/popular", "", MediaCategory.TV_SERIES));
+        }
+        if (category == null || category == MediaCategory.MUSIC) {
+            tasks.add(() -> itunes("top hits"));
+        }
+        runAll(tasks, callback);
+    }
+
     // ------------------------------------------------------------------ task runner
 
     /** Runs the tasks in parallel. Succeeds if at least one provider answers; errors only if all fail. */

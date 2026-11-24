@@ -28,6 +28,7 @@ import com.itismob.s03.groupiseight.adapted.helpers.WindowInsetsHelper;
 import com.itismob.s03.groupiseight.adapted.models.MediaCategory;
 import com.itismob.s03.groupiseight.adapted.models.MediaItem;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -44,7 +45,12 @@ public class ExploreActivity extends AppCompatActivity {
     private List<MediaItem> allMedia;
     private MediaAdapter adapter;
 
-    private static final long SEARCH_DEBOUNCE_MS = 400;
+    private static final long SEARCH_DEBOUNCE_MS = 400; // while typing
+    private static final long BROWSE_DEBOUNCE_MS = 150; // category change / reset: merges bursts of refreshes
+
+    /** True once results (API or fallback) are on screen for {@link #shownCategory}. */
+    private boolean shownAny = false;
+    private MediaCategory shownCategory = null;
     private final Handler searchHandler = new Handler(Looper.getMainLooper());
     private Runnable pendingSearch;
     private int searchRequestId = 0; // ignores responses from outdated searches
@@ -72,7 +78,7 @@ public class ExploreActivity extends AppCompatActivity {
         resultsList = findViewById(R.id.explore_results);
         emptyState = findViewById(R.id.explore_empty_state);
 
-        adapter = new MediaAdapter(allMedia, false);
+        adapter = new MediaAdapter(new ArrayList<>(), false); // filled from the APIs; samples only on failure
         resultsList.setLayoutManager(new GridLayoutManager(this, 2));
         resultsList.setAdapter(adapter);
 
@@ -154,8 +160,11 @@ public class ExploreActivity extends AppCompatActivity {
     }
 
     /**
-     * Empty search box: shows the local library filtered by category (as before).
-     * Text typed: searches the APIs (debounced) for the selected category, or all four for "All".
+     * Loads results from the APIs for the current search text and category (null = All):
+     * - empty search box: popular media (Google Books / TMDB popular / iTunes)
+     * - text typed: matching media from the same providers
+     * Sample data is used ONLY if the request fails. A successful empty response shows the empty state.
+     * Responses from outdated requests are ignored via {@link #searchRequestId}.
      */
     private void refreshResults() {
         String query = searchInput.getText() == null ? "" : searchInput.getText().toString().trim();
@@ -166,20 +175,22 @@ public class ExploreActivity extends AppCompatActivity {
         if (pendingSearch != null) {
             searchHandler.removeCallbacks(pendingSearch);
         }
-        searchRequestId++;
+        final int requestId = ++searchRequestId; // invalidates every earlier request
 
-        if (query.isEmpty()) {
-            showResults(MediaSearchHelper.filter(allMedia, query, category));
-            return;
+        // Different category (or nothing shown yet): clear the old list so it can't be mistaken for the new one.
+        if (!shownAny || shownCategory != category) {
+            shownAny = false;
+            adapter.submitList(new ArrayList<>());
+            resultsList.setVisibility(View.GONE);
+            emptyState.setVisibility(View.GONE);
         }
-
-        final int requestId = searchRequestId;
         resultCountText.setText(R.string.explore_searching);
-        pendingSearch = () -> MediaApiService.search(query, category, new MediaApiService.Callback() {
+
+        MediaApiService.Callback callback = new MediaApiService.Callback() {
             @Override
             public void onSuccess(List<MediaItem> items) {
                 if (requestId == searchRequestId && !isFinishing() && !isDestroyed()) {
-                    showResults(items);
+                    showResults(items, category); // may be empty -> empty state, never samples
                 }
             }
 
@@ -187,15 +198,21 @@ public class ExploreActivity extends AppCompatActivity {
             public void onError(Exception error) {
                 if (requestId == searchRequestId && !isFinishing() && !isDestroyed()) {
                     Toast.makeText(ExploreActivity.this, R.string.explore_search_error, Toast.LENGTH_SHORT).show();
-                    showResults(MediaSearchHelper.filter(allMedia, query, category)); // local fallback
+                    // Fallback only: the request failed, so show the local sample data.
+                    showResults(MediaSearchHelper.filter(allMedia, query, category), category);
                 }
             }
-        });
-        searchHandler.postDelayed(pendingSearch, SEARCH_DEBOUNCE_MS);
+        };
+        pendingSearch = query.isEmpty()
+                ? () -> MediaApiService.browse(category, callback)
+                : () -> MediaApiService.search(query, category, callback);
+        searchHandler.postDelayed(pendingSearch, query.isEmpty() ? BROWSE_DEBOUNCE_MS : SEARCH_DEBOUNCE_MS);
     }
 
     /** Updates the list, count and empty state. */
-    private void showResults(List<MediaItem> results) {
+    private void showResults(List<MediaItem> results, MediaCategory category) {
+        shownAny = true;
+        shownCategory = category;
         adapter.submitList(results);
         boolean hasResults = !results.isEmpty();
         resultsList.setVisibility(hasResults ? View.VISIBLE : View.GONE);
