@@ -11,6 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.itismob.s03.groupiseight.adapted.R;
 import com.itismob.s03.groupiseight.adapted.activities.MediaDetailsActivity;
+import com.itismob.s03.groupiseight.adapted.api.MediaApiService;
 import com.itismob.s03.groupiseight.adapted.helpers.CoverLoader;
 import com.itismob.s03.groupiseight.adapted.models.MediaItem;
 import java.util.ArrayList;
@@ -78,7 +79,17 @@ public class MediaAdapter extends RecyclerView.Adapter<MediaAdapter.MediaViewHol
             coverImage.setContentDescription(
                     context.getString(R.string.media_cover_description, item.getTitle()));
             titleText.setText(item.getTitle());
+            creatorText.setTag(item.getId());
             creatorText.setText(item.getCreator());
+            if (item.isCreatorPending()) {
+                // TMDB movie/TV: director/creator isn't in the search response, so load it for visible cards only.
+                MediaApiService.loadCreator(item, creator -> {
+                    item.setCreator(creator);
+                    if (Integer.valueOf(item.getId()).equals(creatorText.getTag())) {
+                        creatorText.setText(creator); // card may have been recycled for another item
+                    }
+                });
+            }
 
             if (item.hasAdaptationNote()) {
                 adaptationText.setText(item.getAdaptationNote());

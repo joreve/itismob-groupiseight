@@ -19,6 +19,8 @@ public final class ApiMediaCache {
     private static final AtomicInteger NEXT_ID = new AtomicInteger(FIRST_API_ID);
     private static final Map<String, Integer> KEY_TO_ID = new ConcurrentHashMap<>();
     private static final Map<Integer, MediaItem> BY_ID = new ConcurrentHashMap<>();
+    private static final Map<Integer, String> ID_TO_KEY = new ConcurrentHashMap<>();
+    private static final Map<Integer, String> CREATORS = new ConcurrentHashMap<>();
 
     private ApiMediaCache() {
     }
@@ -31,7 +33,23 @@ public final class ApiMediaCache {
         }
         int newId = NEXT_ID.getAndIncrement();
         Integer raced = KEY_TO_ID.putIfAbsent(key, newId);
-        return raced != null ? raced : newId;
+        int id = raced != null ? raced : newId;
+        ID_TO_KEY.put(id, key);
+        return id;
+    }
+
+    /** The provider key ("MOVIE:603") an API id was created from, or null for non-API ids. */
+    public static String keyFor(int id) {
+        return ID_TO_KEY.get(id);
+    }
+
+    /** Director/creator already fetched for this id, or null if not fetched yet. */
+    public static String getCreator(int id) {
+        return CREATORS.get(id);
+    }
+
+    public static void putCreator(int id, String creator) {
+        CREATORS.put(id, creator);
     }
 
     public static void put(MediaItem item) {

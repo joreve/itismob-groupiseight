@@ -171,11 +171,127 @@ public final class MediaApiService {
             String cover = poster.isEmpty() || poster.equals("null") ? null : TMDB_IMAGE + poster;
             String title = o.optString(movie ? "title" : "name", "Untitled");
             String date = o.optString(movie ? "release_date" : "first_air_date");
-            // TMDB search results don't include director/creator; the overview is the closest one-liner.
-            out.add(build(category.name() + ":" + o.getInt("id"), title, o.optString("overview", ""),
+            // Search results don't include director/creator: leave it null (pending) unless we already
+            // fetched it earlier; MediaAdapter then calls loadCreator() lazily for visible cards.
+            String key = category.name() + ":" + o.getInt("id");
+            out.add(build(key, title, ApiMediaCache.getCreator(ApiMediaCache.idFor(key)),
                     category, year(date), (float) (o.optDouble("vote_average", 0) / 2.0), null, null, cover));
         }
         return out;
+    }
+
+    // ------------------------------------------------------------------ TMDB director / creator (lazy)
+
+    public static final String DIRECTOR_UNAVAILABLE = "Director unavailable";
+    public static final String CREATOR_UNAVAILABLE = "Creator unavailable";
+
+    public interface CreatorCallback {
+        /** Main thread. Either the name(s), or "Director unavailable" / "Creator unavailable". */
+        void onCreatorLoaded(String creator);
+    }
+
+    /** Callbacks waiting for an in-flight lookup, so scrolling never fires duplicate requests. Main thread only. */
+    private static final java.util.Map<Integer, List<CreatorCallback>> PENDING_CREATORS = new java.util.HashMap<>();
+
+    /**
+     * Fetches the director (movies: /movie/{id}/credits) or creator (TV: /tv/{id} created_by) for one
+     * TMDB item. One request per item, cached in {@link ApiMediaCache}; call from the main thread.
+     */
+    public static void loadCreator(MediaItem item, CreatorCallback callback) {
+        MediaCategory category = item.getCategory();
+        String key = ApiMediaCache.keyFor(item.getId());
+        if (key == null || (category != MediaCategory.MOVIE && category != MediaCategory.TV_SERIES)) {
+            return;
+        }
+        final int id = item.getId();
+        final boolean movie = category == MediaCategory.MOVIE;
+        final String unavailable = movie ? DIRECTOR_UNAVAILABLE : CREATOR_UNAVAILABLE;
+
+        String cached = ApiMediaCache.getCreator(id);
+        if (cached != null) {
+            callback.onCreatorLoaded(cached);
+            return;
+        }
+        List<CreatorCallback> waiting = PENDING_CREATORS.get(id);
+        if (waiting != null) {
+            waiting.add(callback);
+            return;
+        }
+        waiting = new ArrayList<>();
+        waiting.add(callback);
+        PENDING_CREATORS.put(id, waiting);
+
+        final String tmdbId = key.substring(key.indexOf(':') + 1);
+        EXECUTOR.execute(() -> {
+            String names = null; // null = request failed
+            try {
+                if (BuildConfig.TMDB_API_KEY.isEmpty()) {
+                    throw new IllegalStateException("TMDB_API_KEY missing in local.properties");
+                }
+                String url = movie
+                        ? TMDB_BASE + "/movie/" + tmdbId + "/credits?api_key=" + BuildConfig.TMDB_API_KEY
+                        : TMDB_BASE + "/tv/" + tmdbId + "?api_key=" + BuildConfig.TMDB_API_KEY;
+                String body = get(url);
+                names = movie ? directorsFrom(body) : creatorsFrom(body);
+            } catch (Exception ignored) {
+                // falls through to "unavailable"; not cached, so a later search can retry
+            }
+            final String result = names == null ? unavailable : (names.isEmpty() ? unavailable : names);
+            final boolean cacheIt = names != null;
+            MAIN.post(() -> {
+                if (cacheIt) {
+                    ApiMediaCache.putCreator(id, result);
+                }
+                List<CreatorCallback> done = PENDING_CREATORS.remove(id);
+                if (done != null) {
+                    for (CreatorCallback cb : done) {
+                        cb.onCreatorLoaded(result);
+                    }
+                }
+            });
+        });
+    }
+
+    /** "Director" crew entries from a /movie/{id}/credits response, comma-separated (max 3); "" if none. */
+    static String directorsFrom(String json) throws Exception {
+        JSONArray crew = new JSONObject(json).optJSONArray("crew");
+        List<String> names = new ArrayList<>();
+        if (crew != null) {
+            for (int i = 0; i < crew.length() && names.size() < 3; i++) {
+                JSONObject c = crew.getJSONObject(i);
+                String name = c.optString("name", "");
+                if ("Director".equals(c.optString("job")) && !name.isEmpty() && !names.contains(name)) {
+                    names.add(name);
+                }
+            }
+        }
+        return join(names);
+    }
+
+    /** created_by names from a /tv/{id} response, comma-separated (max 3); "" if none. */
+    static String creatorsFrom(String json) throws Exception {
+        JSONArray createdBy = new JSONObject(json).optJSONArray("created_by");
+        List<String> names = new ArrayList<>();
+        if (createdBy != null) {
+            for (int i = 0; i < createdBy.length() && names.size() < 3; i++) {
+                String name = createdBy.getJSONObject(i).optString("name", "");
+                if (!name.isEmpty() && !names.contains(name)) {
+                    names.add(name);
+                }
+            }
+        }
+        return join(names);
+    }
+
+    private static String join(List<String> names) {
+        StringBuilder sb = new StringBuilder();
+        for (String n : names) {
+            if (sb.length() > 0) {
+                sb.append(", ");
+            }
+            sb.append(n);
+        }
+        return sb.toString();
     }
 
     // ------------------------------------------------------------------ iTunes

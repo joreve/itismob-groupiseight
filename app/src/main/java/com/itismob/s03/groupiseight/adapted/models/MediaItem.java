@@ -3,7 +3,7 @@ package com.itismob.s03.groupiseight.adapted.models;
 public class MediaItem {
     private final int id;
     private final String title;
-    private final String creator;
+    private volatile String creator; // null only for TMDB items whose director/creator is still loading
     private final MediaCategory category;
     private final int year;
     private final float rating;
@@ -40,7 +40,9 @@ public class MediaItem {
 
     public int getId() { return id; }
     public String getTitle() { return title; }
-    public String getCreator() { return creator; }
+    public String getCreator() { return creator == null ? "" : creator; }
+    public boolean isCreatorPending() { return creator == null; }
+    public void setCreator(String creator) { this.creator = creator; }
     public MediaCategory getCategory() { return category; }
     public int getYear() { return year; }
     public float getRating() { return rating; }
