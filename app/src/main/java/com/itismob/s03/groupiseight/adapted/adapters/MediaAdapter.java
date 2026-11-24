@@ -11,6 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.itismob.s03.groupiseight.adapted.R;
 import com.itismob.s03.groupiseight.adapted.activities.MediaDetailsActivity;
+import com.itismob.s03.groupiseight.adapted.helpers.CoverLoader;
 import com.itismob.s03.groupiseight.adapted.models.MediaItem;
 import java.util.ArrayList;
 import java.util.List;
@@ -73,7 +74,7 @@ public class MediaAdapter extends RecyclerView.Adapter<MediaAdapter.MediaViewHol
 
         void bind(MediaItem item) {
             Context context = itemView.getContext();
-            coverImage.setImageResource(item.getCoverResId());
+            CoverLoader.load(coverImage, item);
             coverImage.setContentDescription(
                     context.getString(R.string.media_cover_description, item.getTitle()));
             titleText.setText(item.getTitle());

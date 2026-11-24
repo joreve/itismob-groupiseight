@@ -2,6 +2,9 @@ package com.itismob.s03.groupiseight.adapted.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.widget.Toast;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
@@ -18,6 +21,7 @@ import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.textfield.TextInputEditText;
 import com.itismob.s03.groupiseight.adapted.R;
 import com.itismob.s03.groupiseight.adapted.adapters.MediaAdapter;
+import com.itismob.s03.groupiseight.adapted.api.MediaApiService;
 import com.itismob.s03.groupiseight.adapted.data.SampleMediaData;
 import com.itismob.s03.groupiseight.adapted.helpers.MediaSearchHelper;
 import com.itismob.s03.groupiseight.adapted.helpers.WindowInsetsHelper;
@@ -39,6 +43,11 @@ public class ExploreActivity extends AppCompatActivity {
 
     private List<MediaItem> allMedia;
     private MediaAdapter adapter;
+
+    private static final long SEARCH_DEBOUNCE_MS = 400;
+    private final Handler searchHandler = new Handler(Looper.getMainLooper());
+    private Runnable pendingSearch;
+    private int searchRequestId = 0; // ignores responses from outdated searches
 
     private TextInputEditText searchInput;
     private ChipGroup categoryChips;
@@ -144,22 +153,55 @@ public class ExploreActivity extends AppCompatActivity {
         }
     }
 
-    /** Re-runs search + category filter and updates the list, count, reset button and empty state. */
+    /**
+     * Empty search box: shows the local library filtered by category (as before).
+     * Text typed: searches the APIs (debounced) for the selected category, or all four for "All".
+     */
     private void refreshResults() {
-        String query = searchInput.getText() == null ? "" : searchInput.getText().toString();
+        String query = searchInput.getText() == null ? "" : searchInput.getText().toString().trim();
         MediaCategory category = getSelectedCategory();
 
-        List<MediaItem> results = MediaSearchHelper.filter(allMedia, query, category);
-        adapter.submitList(results);
+        resetButton.setVisibility((!query.isEmpty() || category != null) ? View.VISIBLE : View.INVISIBLE);
 
+        if (pendingSearch != null) {
+            searchHandler.removeCallbacks(pendingSearch);
+        }
+        searchRequestId++;
+
+        if (query.isEmpty()) {
+            showResults(MediaSearchHelper.filter(allMedia, query, category));
+            return;
+        }
+
+        final int requestId = searchRequestId;
+        resultCountText.setText(R.string.explore_searching);
+        pendingSearch = () -> MediaApiService.search(query, category, new MediaApiService.Callback() {
+            @Override
+            public void onSuccess(List<MediaItem> items) {
+                if (requestId == searchRequestId && !isFinishing() && !isDestroyed()) {
+                    showResults(items);
+                }
+            }
+
+            @Override
+            public void onError(Exception error) {
+                if (requestId == searchRequestId && !isFinishing() && !isDestroyed()) {
+                    Toast.makeText(ExploreActivity.this, R.string.explore_search_error, Toast.LENGTH_SHORT).show();
+                    showResults(MediaSearchHelper.filter(allMedia, query, category)); // local fallback
+                }
+            }
+        });
+        searchHandler.postDelayed(pendingSearch, SEARCH_DEBOUNCE_MS);
+    }
+
+    /** Updates the list, count and empty state. */
+    private void showResults(List<MediaItem> results) {
+        adapter.submitList(results);
         boolean hasResults = !results.isEmpty();
         resultsList.setVisibility(hasResults ? View.VISIBLE : View.GONE);
         emptyState.setVisibility(hasResults ? View.GONE : View.VISIBLE);
         resultCountText.setText(getResources().getQuantityString(
                 R.plurals.explore_result_count, results.size(), results.size()));
-
-        boolean filtersActive = !query.trim().isEmpty() || category != null;
-        resetButton.setVisibility(filtersActive ? View.VISIBLE : View.INVISIBLE);
     }
 
     /** Clears the search text and goes back to the "All" category. */
@@ -199,6 +241,12 @@ public class ExploreActivity extends AppCompatActivity {
             default:
                 return R.id.chip_all;
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        searchHandler.removeCallbacksAndMessages(null);
     }
 
     private void hideKeyboard() {

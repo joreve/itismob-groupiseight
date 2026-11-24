@@ -16,12 +16,14 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.itismob.s03.groupiseight.adapted.R;
 import com.itismob.s03.groupiseight.adapted.adapters.MediaAdapter;
+import com.itismob.s03.groupiseight.adapted.api.MediaApiService;
 import com.itismob.s03.groupiseight.adapted.data.SampleMediaData;
 import com.itismob.s03.groupiseight.adapted.helpers.AuthManager;
 import com.itismob.s03.groupiseight.adapted.helpers.WindowInsetsHelper;
 import com.itismob.s03.groupiseight.adapted.models.MediaCategory;
 import com.itismob.s03.groupiseight.adapted.models.MediaItem;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class HomeActivity extends AppCompatActivity {
@@ -47,6 +49,17 @@ public class HomeActivity extends AppCompatActivity {
 
         setupSection(R.id.section_trending, R.id.list_trending,
                 R.string.home_section_trending, SampleMediaData.getTrendingMedia());
+
+        // Popular media from the APIs, one section per category (hidden until loaded).
+        setupPopularSection(R.id.section_popular_books, R.id.list_popular_books,
+                R.string.home_section_popular_books, MediaCategory.BOOK);
+        setupPopularSection(R.id.section_popular_movies, R.id.list_popular_movies,
+                R.string.home_section_popular_movies, MediaCategory.MOVIE);
+        setupPopularSection(R.id.section_popular_tv, R.id.list_popular_tv,
+                R.string.home_section_popular_tv, MediaCategory.TV_SERIES);
+        setupPopularSection(R.id.section_popular_music, R.id.list_popular_music,
+                R.string.home_section_popular_music, MediaCategory.MUSIC);
+
         setupSection(R.id.section_trending_adaptations, R.id.list_trending_adaptations,
                 R.string.home_section_trending_adaptations, SampleMediaData.getTrendingAdaptations());
         setupSection(R.id.section_recently_added, R.id.list_recently_added,
@@ -76,6 +89,36 @@ public class HomeActivity extends AppCompatActivity {
         RecyclerView list = findViewById(listId);
         list.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
         list.setAdapter(new MediaAdapter(items, true));
+    }
+
+    /** A popular-media row for one category. Stays hidden if the API fails or returns nothing. */
+    private void setupPopularSection(@IdRes int headerId, @IdRes int listId, @StringRes int titleRes,
+                                     MediaCategory category) {
+        View header = findViewById(headerId);
+        ((TextView) header.findViewById(R.id.section_title)).setText(titleRes);
+        header.findViewById(R.id.section_see_all).setOnClickListener(v -> openExplore(category, false));
+
+        RecyclerView list = findViewById(listId);
+        list.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+        MediaAdapter adapter = new MediaAdapter(new ArrayList<>(), true);
+        list.setAdapter(adapter);
+
+        MediaApiService.getPopular(category, new MediaApiService.Callback() {
+            @Override
+            public void onSuccess(List<MediaItem> items) {
+                if (isFinishing() || isDestroyed() || items.isEmpty()) {
+                    return;
+                }
+                adapter.submitList(items.subList(0, Math.min(items.size(), 10)));
+                header.setVisibility(View.VISIBLE);
+                list.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void onError(Exception error) {
+                // Offline / missing key: leave this section hidden.
+            }
+        });
     }
 
     private void setupBottomNavigation() {
