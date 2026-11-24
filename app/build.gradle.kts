@@ -24,6 +24,8 @@ android {
         versionName = "1.0"
 
         buildConfigField("String", "TMDB_API_KEY", "\"${localProps.getProperty("TMDB_API_KEY", "")}\"")
+        // Optional: avoids Google Books anonymous-quota errors (HTTP 429). local.properties: GOOGLE_BOOKS_API_KEY=...
+        buildConfigField("String", "GOOGLE_BOOKS_API_KEY", "\"${localProps.getProperty("GOOGLE_BOOKS_API_KEY", "")}\"")
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }

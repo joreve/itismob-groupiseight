@@ -65,7 +65,7 @@
     <string name="explore_title">Explore</string>
     <string name="explore_search_hint">Title, author, director, artist, album…</string>
     <string name="explore_searching">Searching…</string>
-    <string name="explore_search_error">Couldn't reach the media services. Showing local results.</string>
+    <string name="explore_search_error">Couldn\'t reach the media services. Showing local results.</string>
     <string name="explore_reset">Reset</string>
     <string name="explore_empty_title">No results found</string>
     <string name="explore_empty_message">Try a different title, creator, or category.</string>

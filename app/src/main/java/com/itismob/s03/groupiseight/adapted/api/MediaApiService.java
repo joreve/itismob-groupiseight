@@ -147,32 +147,7 @@ public final class MediaApiService {
     // ------------------------------------------------------------------ Google Books
 
     private static List<MediaItem> booksSearch(String query) throws Exception {
-        String url = "https://www.googleapis.com/books/v1/volumes?printType=books&maxResults=20&q="
-                + enc(query);
-        JSONArray arr = new JSONObject(get(url)).optJSONArray("items");
-        List<MediaItem> out = new ArrayList<>();
-        if (arr == null) {
-            return out;
-        }
-        for (int i = 0; i < arr.length(); i++) {
-            JSONObject o = arr.getJSONObject(i);
-            JSONObject info = o.optJSONObject("volumeInfo");
-            if (info == null) {
-                continue;
-            }
-            JSONArray authors = info.optJSONArray("authors");
-            String creator = authors != null && authors.length() > 0 ? authors.getString(0) : "Unknown author";
-            JSONObject links = info.optJSONObject("imageLinks");
-            String cover = links == null ? null : links.optString("thumbnail", null);
-            if (cover != null) {
-                cover = cover.replace("http://", "https://").replace("&edge=curl", "");
-            }
-            out.add(build("BOOK:" + o.getString("id"), info.optString("title", "Untitled"), creator,
-                    MediaCategory.BOOK, year(info.optString("publishedDate")),
-                    (float) info.optDouble("averageRating", 0), info.optString("publisher", null),
-                    null, cover));
-        }
-        return out;
+        return GoogleBooksClient.search(query);
     }
 
     // ------------------------------------------------------------------ TMDB
