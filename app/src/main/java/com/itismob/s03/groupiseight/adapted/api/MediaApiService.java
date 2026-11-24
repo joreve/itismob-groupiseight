@@ -5,6 +5,7 @@ import android.os.Looper;
 import android.util.Log;
 
 import com.itismob.s03.groupiseight.adapted.BuildConfig;
+import com.itismob.s03.groupiseight.adapted.data.SampleMediaData;
 import com.itismob.s03.groupiseight.adapted.models.MediaCategory;
 import com.itismob.s03.groupiseight.adapted.models.MediaItem;
 
@@ -81,7 +82,7 @@ public final class MediaApiService {
                 tasks.add(() -> tmdb("/trending/tv/week", "", MediaCategory.TV_SERIES));
                 break;
             default:
-                // Home "Popular music": Apple's Philippines most-played chart (Explore still uses iTunes Search).
+                // Popular music: Apple's Philippines most-played chart (shared with Explore's default music via browse()).
                 tasks.add(() -> appleMusicChart());
                 break;
         }
@@ -90,7 +91,8 @@ public final class MediaApiService {
 
     /**
      * Explore with no search text: popular media for one category, or all four when category is null.
-     * Books: Google Books (fiction), Movies/TV: TMDB popular, Music: iTunes search.
+     * Books: Google Books (fiction), Movies/TV: TMDB popular, Music: Apple RSS PH most-played chart
+     * (the same source as the Home screen). Typed searches still use {@link #search} / iTunes.
      */
     public static void browse(MediaCategory category, Callback callback) {
         List<Task> tasks = new ArrayList<>();
@@ -104,7 +106,10 @@ public final class MediaApiService {
             tasks.add(() -> tmdb("/tv/popular", "", MediaCategory.TV_SERIES));
         }
         if (category == null || category == MediaCategory.MUSIC) {
-            tasks.add(() -> itunes("top hits"));
+            // Music-only: a failure propagates so Explore shows its usual error + sample fallback.
+            // All: books/movies/TV must still show, so a failed chart is replaced by sample music here.
+            final boolean allTab = category == null;
+            tasks.add(() -> allTab ? appleMusicChartOrSamples() : appleMusicChart());
         }
         runAll(tasks, callback);
     }
@@ -358,38 +363,56 @@ public final class MediaApiService {
         }
     }
 
+    /** Explore "All" only: the chart, or the sample songs if the chart request failed (empty success stays empty). */
+    private static List<MediaItem> appleMusicChartOrSamples() {
+        try {
+            return appleMusicChart();
+        } catch (Exception e) {
+            List<MediaItem> samples = new ArrayList<>();
+            for (MediaItem item : SampleMediaData.getAllMedia()) {
+                if (item.getCategory() == MediaCategory.MUSIC) {
+                    samples.add(item);
+                }
+            }
+            return samples;
+        }
+    }
+
     /**
      * Parses {"feed":{"results":[{id,name,artistName,releaseDate,artworkUrl100,url}, ...]}}.
-     * Throws if nothing usable is found so the Home screen can fall back to sample music.
+     * Throws if the response is malformed (no feed.results) or lists songs but none are usable, so callers
+     * fall back to sample music. A well-formed chart with an empty results array is a successful empty
+     * result: it returns an empty list (Home still shows sample music for it; Explore shows its empty state).
      */
     static List<MediaItem> parseAppleChart(String json) throws Exception {
         JSONObject feed = new JSONObject(json).optJSONObject("feed");
         JSONArray arr = feed == null ? null : feed.optJSONArray("results");
-        List<MediaItem> out = new ArrayList<>();
-        if (arr != null) {
-            for (int i = 0; i < arr.length(); i++) {
-                JSONObject o = arr.optJSONObject(i);
-                if (o == null) {
-                    continue;
-                }
-                String songId = o.optString("id", "");
-                String name = o.optString("name", "");
-                if (songId.isEmpty() || name.isEmpty()) {
-                    continue; // unusable entry
-                }
-                String art = o.optString("artworkUrl100", "");
-                String cover = art.isEmpty() ? null : art.replace("100x100bb", "400x400bb");
-                String key = "MUSIC:" + songId;
-                MediaItem item = build(key, name, o.optString("artistName", "Unknown artist"),
-                        MediaCategory.MUSIC, year(o.optString("releaseDate")), 0f, null, null, cover);
-                String url = o.optString("url", "");
-                if (!url.isEmpty()) {
-                    ApiMediaCache.putSourceUrl(item.getId(), url);
-                }
-                out.add(item);
-            }
+        if (arr == null) {
+            throw new java.io.IOException("Apple RSS chart response has no feed.results array");
         }
-        if (out.isEmpty()) {
+        List<MediaItem> out = new ArrayList<>();
+        for (int i = 0; i < arr.length(); i++) {
+            JSONObject o = arr.optJSONObject(i);
+            if (o == null) {
+                continue;
+            }
+            String songId = o.optString("id", "");
+            String name = o.optString("name", "");
+            if (songId.isEmpty() || name.isEmpty()) {
+                continue; // unusable entry
+            }
+            String art = o.optString("artworkUrl100", "");
+            String cover = art.isEmpty() ? null : art.replace("100x100bb", "400x400bb");
+            String key = "MUSIC:" + songId;
+            MediaItem item = build(key, name, o.optString("artistName", "Unknown artist"),
+                    MediaCategory.MUSIC, year(o.optString("releaseDate")), 0f, null, null, cover);
+            String url = o.optString("url", "");
+            if (!url.isEmpty()) {
+                ApiMediaCache.putSourceUrl(item.getId(), url);
+            }
+            out.add(item);
+        }
+        if (out.isEmpty() && arr.length() > 0) {
             throw new java.io.IOException("Apple RSS chart returned no usable songs");
         }
         return out;
