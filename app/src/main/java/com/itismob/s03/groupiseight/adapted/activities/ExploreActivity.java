@@ -161,8 +161,8 @@ public class ExploreActivity extends AppCompatActivity {
 
     /**
      * Loads results from the APIs for the current search text and category (null = All):
-     * - empty search box: popular media (Google Books / TMDB popular / iTunes)
-     * - text typed: matching media from the same providers
+     * - empty search box: popular media (Google Books / TMDB popular / Apple RSS PH music chart)
+     * - text typed: matching media (Google Books / TMDB / iTunes Search for music)
      * Sample data is used ONLY if the request fails. A successful empty response shows the empty state.
      * Responses from outdated requests are ignored via {@link #searchRequestId}.
      */
