@@ -21,6 +21,7 @@ public final class ApiMediaCache {
     private static final Map<Integer, MediaItem> BY_ID = new ConcurrentHashMap<>();
     private static final Map<Integer, String> ID_TO_KEY = new ConcurrentHashMap<>();
     private static final Map<Integer, String> CREATORS = new ConcurrentHashMap<>();
+    private static final Map<Integer, String> SOURCE_URLS = new ConcurrentHashMap<>();
 
     private ApiMediaCache() {
     }
@@ -50,6 +51,15 @@ public final class ApiMediaCache {
 
     public static void putCreator(int id, String creator) {
         CREATORS.put(id, creator);
+    }
+
+    /** Provider page for an item (e.g. the Apple Music song URL), or null. Not shown in the UI yet. */
+    public static String getSourceUrl(int id) {
+        return SOURCE_URLS.get(id);
+    }
+
+    public static void putSourceUrl(int id, String url) {
+        SOURCE_URLS.put(id, url);
     }
 
     public static void put(MediaItem item) {

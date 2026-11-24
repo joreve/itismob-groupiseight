@@ -106,7 +106,11 @@ public class HomeActivity extends AppCompatActivity {
         MediaApiService.getPopular(category, new MediaApiService.Callback() {
             @Override
             public void onSuccess(List<MediaItem> items) {
-                if (isFinishing() || isDestroyed() || items.isEmpty()) {
+                if (isFinishing() || isDestroyed()) {
+                    return;
+                }
+                if (items.isEmpty()) {
+                    showMusicFallback(category, adapter, header, list);
                     return;
                 }
                 adapter.submitList(items.subList(0, Math.min(items.size(), 10)));
@@ -116,9 +120,31 @@ public class HomeActivity extends AppCompatActivity {
 
             @Override
             public void onError(Exception error) {
-                // Offline / missing key: leave this section hidden.
+                // Offline / missing key: leave this section hidden (music falls back to sample data).
+                if (!isFinishing() && !isDestroyed()) {
+                    showMusicFallback(category, adapter, header, list);
+                }
             }
         });
+    }
+
+    /** Popular Music only: when the Apple chart fails or is unusable, show the sample music instead. */
+    private void showMusicFallback(MediaCategory category, MediaAdapter adapter, View header, RecyclerView list) {
+        if (category != MediaCategory.MUSIC) {
+            return;
+        }
+        List<MediaItem> samples = new ArrayList<>();
+        for (MediaItem item : SampleMediaData.getAllMedia()) {
+            if (item.getCategory() == MediaCategory.MUSIC) {
+                samples.add(item);
+            }
+        }
+        if (samples.isEmpty()) {
+            return;
+        }
+        adapter.submitList(samples.subList(0, Math.min(samples.size(), 10)));
+        header.setVisibility(View.VISIBLE);
+        list.setVisibility(View.VISIBLE);
     }
 
     private void setupBottomNavigation() {

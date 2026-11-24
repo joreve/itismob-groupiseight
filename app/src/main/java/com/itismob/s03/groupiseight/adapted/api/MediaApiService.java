@@ -2,6 +2,7 @@ package com.itismob.s03.groupiseight.adapted.api;
 
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 
 import com.itismob.s03.groupiseight.adapted.BuildConfig;
 import com.itismob.s03.groupiseight.adapted.models.MediaCategory;
@@ -80,7 +81,8 @@ public final class MediaApiService {
                 tasks.add(() -> tmdb("/trending/tv/week", "", MediaCategory.TV_SERIES));
                 break;
             default:
-                tasks.add(() -> itunes("top hits"));
+                // Home "Popular music": Apple's Philippines most-played chart (Explore still uses iTunes Search).
+                tasks.add(() -> appleMusicChart());
                 break;
         }
         runAll(tasks, callback);
@@ -336,6 +338,59 @@ public final class MediaApiService {
             out.add(build("MUSIC:" + o.getLong("trackId"), o.optString("trackName", "Untitled"),
                     o.optString("artistName", "Unknown artist"), MediaCategory.MUSIC,
                     year(o.optString("releaseDate")), 0f, null, o.optString("collectionName", null), art));
+        }
+        return out;
+    }
+
+    // ------------------------------------------------------------------ Apple RSS chart (Home popular music)
+
+    private static final String APPLE_CHART_URL =
+            "https://rss.applemarketingtools.com/api/v2/ph/music/most-played/25/songs.json";
+
+    private static List<MediaItem> appleMusicChart() throws Exception {
+        try {
+            List<MediaItem> songs = parseAppleChart(get(APPLE_CHART_URL));
+            Log.d("AppleChart", "Parsed " + songs.size() + " song(s) from the PH most-played chart");
+            return songs;
+        } catch (Exception e) {
+            Log.e("AppleChart", "Apple RSS chart failed: " + e, e);
+            throw e; // caller falls back to the sample music row
+        }
+    }
+
+    /**
+     * Parses {"feed":{"results":[{id,name,artistName,releaseDate,artworkUrl100,url}, ...]}}.
+     * Throws if nothing usable is found so the Home screen can fall back to sample music.
+     */
+    static List<MediaItem> parseAppleChart(String json) throws Exception {
+        JSONObject feed = new JSONObject(json).optJSONObject("feed");
+        JSONArray arr = feed == null ? null : feed.optJSONArray("results");
+        List<MediaItem> out = new ArrayList<>();
+        if (arr != null) {
+            for (int i = 0; i < arr.length(); i++) {
+                JSONObject o = arr.optJSONObject(i);
+                if (o == null) {
+                    continue;
+                }
+                String songId = o.optString("id", "");
+                String name = o.optString("name", "");
+                if (songId.isEmpty() || name.isEmpty()) {
+                    continue; // unusable entry
+                }
+                String art = o.optString("artworkUrl100", "");
+                String cover = art.isEmpty() ? null : art.replace("100x100bb", "400x400bb");
+                String key = "MUSIC:" + songId;
+                MediaItem item = build(key, name, o.optString("artistName", "Unknown artist"),
+                        MediaCategory.MUSIC, year(o.optString("releaseDate")), 0f, null, null, cover);
+                String url = o.optString("url", "");
+                if (!url.isEmpty()) {
+                    ApiMediaCache.putSourceUrl(item.getId(), url);
+                }
+                out.add(item);
+            }
+        }
+        if (out.isEmpty()) {
+            throw new java.io.IOException("Apple RSS chart returned no usable songs");
         }
         return out;
     }
